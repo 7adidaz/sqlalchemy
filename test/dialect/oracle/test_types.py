@@ -1807,6 +1807,7 @@ class SetInputSizesTest(fixtures.TestBase):
         finally:
             event.remove(testing.db, "do_setinputsizes", _remove_type)
 
+
 class JSONTest(fixtures.TestBase):
     __requires__ = ("json_type",)
     __only_on__ = "oracle"

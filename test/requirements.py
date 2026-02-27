@@ -2185,7 +2185,6 @@ class DefaultRequirements(SuiteRequirements):
     @property
     def json_deserializer_is_used(self):
         """Indicates if custom json_deserializer is called for JSON columns.
-        
         Some database drivers (e.g., Oracle's oracledb) automatically
         deserialize JSON at the DBAPI level, returning native Python objects
         directly, which means custom json_deserializer cannot be invoked.
