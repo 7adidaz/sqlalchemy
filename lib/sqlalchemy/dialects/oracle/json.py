@@ -7,10 +7,10 @@
 # mypy: ignore-errors
 
 from __future__ import annotations
-from typing import Any
+
 from decimal import Decimal
-from typing import TYPE_CHECKING
 import json
+from typing import TYPE_CHECKING, Any
 
 from ... import types as sqltypes
 
@@ -22,13 +22,17 @@ if TYPE_CHECKING:
 
 class JSON(sqltypes.JSON):
     """
-    Note: The oracledb Python driver automatically deserializes JSON column data,
-    returning native Python objects (dict, list, bool, int, float, str) directly.
+    Note: The oracledb Python driver automatically deserializes
+    JSON column data, returning native Python objects
+    (dict, list, bool, int, float, str) directly.
     """
 
     def result_processor(self, dialect, coltype):  # type: ignore[override]
         string_process = self._str_impl.result_processor(dialect, coltype)
-        json_deserializer = getattr(dialect, "_json_deserializer", None) or json.loads
+        json_deserializer = (
+            getattr(dialect, "_json_deserializer", None)
+            or json.loads
+        )
 
         def process(value):
             if value is None:
@@ -40,8 +44,10 @@ class JSON(sqltypes.JSON):
             if isinstance(value, Decimal):
                 return float(value)
 
-            # If it's a string, it might be JSON that needs deserializing
-            # This can happen with CAST operations or when reading from VARCHAR2 columns
+            # If it's a string, it might be JSON that needs
+            # deserializing. This can happen with CAST
+            # operations or when reading from VARCHAR2
+            # columns.
             if isinstance(value, str):
                 try:
                     return json_deserializer(value)
